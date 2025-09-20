@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="heatequationsolver.css">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2025.8.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2025.8.1/core.js"></script>
+</head>
+
+<body>
+    <h1>Simulate Heat Dispersion of your own Initial Heat Distribution</h1>
+    <p>
+        This heat equation solver lets you draw your own starting distribution of heat, and let's you see how the heat will disperse.
+        The grid is 64 by 64 pixels, and you can assign temperatures from zero to ninety-nine. Upon clicking "run", it will numerically
+        approximate the solution to the heat dispersion equation using the Locally One-Dimensional (LOD) method, utilizing the Crank-Nicholson
+        method as the chosen 1D finite difference method. The results will be diplayed below.
+    </p>
+    <h2 id="drawtext">Draw your own initial heat signature</h2>
+
+    <!-- drawing stuff -->
+    <div class="canvassection">
+        <div class="toolbar">
+            <button id='clearbutton' onclick="clearcanvas()">Clear</button>
+            <div class="colorslider">
+                <input type="range" min="0" max="99" value="50" class="slider" id="colorpicker">
+                <p>Temperature: <span id="temperature"></span></p>
+            </div>
+            <div class="sizeslider">
+                <input type="range" min="1" max="63" value="32" class="slider" id="sizepicker">
+                <p>Size: <span id="size"></span></p>
+            </div>
+            <label for="penselect">Choose pen type</label>
+            <select name="pen" id="penselect">
+                <option value="circle">●</option>
+                <option value="square">■</option>
+            </select>
+            <div class="pencanvas">
+                <canvas id="pencanvas" width="152" height="152"></canvas>
+            </div>
+            <button id="runbutton" py-click="main">Run</button>
+        </div>
+
+        <div class="canvaswrapper">
+            <canvas id="paintcanvas" width="512" height="512"></canvas>
+            <img src="colorbar.png" alt="Colorbar" class="colorbar">
+        </div>
+    </div>
+
+    <h2 id="resulttext">See the results here</h2>
+    <!-- result stuff -->
+    <div class="canvassection">
+        <div class="canvaswrapper">
+            <canvas id="resultcanvas" width="512" height="512"></canvas>
+            <img src="colorbar.png" alt="Colorbar" class="colorbar">
+        </div>
+
+        <div class="player">
+            <div class="frameslider">
+                <input type="range" min="0" max="299" value="0" class="slider" id="framepicker">
+                <p>Frame: <span id="frame"></span></p>
+            </div>
+            <button id="pausebutton">❚❚</button>
+            <button id="resetbutton" onclick="resetpage()">Draw another heat signature</button>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script type="text/javascript" src="heatequationsolver.js"></script>
+    <script type="py" src="heatequationsolver.py" config="pyscript.json"></script>
+
+</body>
