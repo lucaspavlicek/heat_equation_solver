@@ -11,7 +11,7 @@ My website showcases a past class project of mine and also has the potential to 
 ### The specific problem
 The solver approximates 2D heat diffusion on a square according to the partial differential equation:
 ```math
-\frac{\partial U}{\partial t} = \alpha \(\frac{\partial^2 U}{\partial x^2} + \frac{\partial^2 U}{\partial y^2}\)
+\frac{\partial U}{\partial t} = \alpha \left(\frac{\partial^2 U}{\partial x^2} + \frac{\partial^2 U}{\partial y^2}\right)
 ```
 We assume Dirchelet boundary conditions, meaning that the boundary of the square is fixed at a certain temperature. In this case, the border is held at a temperature of zero. I divided the square into a 64 by 64 grid, and you can draw your own initial heat distribution. The solver simulates 200 iterations in time. I also kept everything unit-less to be nice and simple, and set the diffusion constant to 1. One final note, The boundary on my grid doesn't appear to be actually zero. Just imagine there was another ring of tiles all set to zero around the perimeter. My code acts as if there is.
 
