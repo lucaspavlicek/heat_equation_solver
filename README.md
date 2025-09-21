@@ -11,12 +11,26 @@ My website showcases a past class project of mine and also has the potential to 
 ### Specifications
 The solver approximates 2D heat diffusion on a square according to the partial differential equation:
 
-$$\frac{\partial U}{\partial t} = \alpha \big(\frac{\partial^2 U}{\partial x^2} + \frac{\partial^2 U}{\partial y^2}\big)$$
+$$\frac{\partial U}{\partial t} = \alpha (\frac{\partial^2 U}{\partial x^2} + \frac{\partial^2 U}{\partial y^2})$$
 
 We won't derive an analytical solution to the equation; it would not be practical to find an analytical solution to whatever whacky intial condition that a user draws. Instead we will focus on numerical approximations to the heat equation. The website uses a finite difference method, so the problem is broken down into a 64 by 64 grid. We assume Dirichlet boundary conditions, meaning that the boundary of the square is fixed at a certain temperature. In this case, the border is held at a temperature of zero. Imagine there is another ring of pixels around the canvas, and each of these pixels is held constant at temperature zero. To keep things simple, the diffusion constant, $\alpha$, the grid spacing, typically denoted $\Delta x$, and the time discretization spacing, $\Delta t$, are all set to one. Lastly, the solver approximates three hundred frames of heat flow.
 
 ### The Locally One-Dimensional (LOD) Method
-The method is a clever way to utilize a 1D finite difference method to solve the heat equation in 2D. As the name might imply, we treat things one-dimensionally, one at a time. Essentially, we work in two alternating steps: first approximating heat flow left to right, then up and down. It approximates a small iteration of heat flow going as if the grid were a bunch of one-dimensional horizontal rods that are completely insulated from each other. For each row in the grid, we simulate one iteration of a 1D heat equation solver. I used 1D Crank-Nicholson, but any 1D finite difference method should do the trick. This text won't go into detail about the 1D methods, and instead focuses on extending the 1D methods into 2D. For more information on the 1D Crank-Nicholson method, see the heat diffusion section on the [Wikipedia page](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method#Example:_1D_diffusion) or the 
+The method is a clever way to utilize a 1D finite difference method to solve the heat equation in 2D. As the name might imply, we treat things one-dimensionally, one at a time, relying on a 1D finite difference approixmation. This text won't go into detail about the 1D methods, and instead focuses on extending the 1D methods into 2D. I used 1D Crank-Nicolson, but any 1D finite difference method should do the trick. For more information on the 1D Crank-Nicolson method, see the heat diffusion section on the [Wikipedia page](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method). There is plenty of useful information available on the popular Crank-Nicolson method, as well as other methods online.
+
+The Locally One-Dimensional method is quite simple. It essentially uses a 1D solver to simulate heat flow from left to right, and then up and down, and continues to alternate. It is a recursive method. In one iteration:
+- We approximates a small iteration of heat flow going as if the grid was a bunch of one dimensional horizontal rods that are completely insulated from each other. For each row in the grid, we simulate one iteration of a 1D heat equation solver.
+- After we have simulated heat flow from left to right, we do the same thing going up and down—so we split the grid into columns insulated from each other, and simulate 1D heat flow going up and down.
+
+The LOD method is not the most accurate method for 2D problems. Its strengths are its simplicity and computational efficiency. Each 1D iteration of Crank-Nicolson on a rod involves solving one tridiagonal system ($\mathcal{O} (n) $) where $n$ is the length of the rod. Each iteration of LOD utilizes Crank-Nicolson $2n$ times, for $n$ rows and then also $n$ columns. This gives one iteration of LOD a computational complexity of $\mathcal{O} (n^2) $. Not bad!
+
+### Notes about the code
+The website relies on an HTML file to organize website elements, a CSS file for formatting, and a JavaScript file for interactability. That's all pretty standard, but there is also a Python script. That is because Python is better suited for numerical calculation, and it is my most proficient programming language. The website relies on the brilliant tool PyScript to run Python in the browser and allow communication between JavaScript and Python. When the user clicks the run button, the following happens:
+- JavaScript saves the drawing canvas data into a variable.
+- Python imports the variable from JavaScript and decodes its data into a Numpy array of temperatures, to be used as the initial condition.
+- Python solves 300 iterations of heat diffusion.
+- Python converts the results from a 3D array to a list of lists of lists and "shows" JavaScript.
+- JavaScript recieves the results and displays them in an interactive player.
 
 ...
 
